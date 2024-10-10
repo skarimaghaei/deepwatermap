@@ -24,14 +24,14 @@ def model(min_width=4):
         return x
 
     def downscaling_unit(x):
-        num_filters = int(x.get_shape()[-1]) * 4
+        num_filters = int(x.shape[-1]) * 4
         x_1 = conv_block(x, num_filters, kernel_size=5, stride=2)
         x_2 = conv_block(x_1, num_filters, kernel_size=3, stride=1)
         x = tf.keras.layers.Add()([x_1, x_2])
         return x
 
     def upscaling_unit(x):
-        num_filters = int(x.get_shape()[-1]) // 4
+        num_filters = int(x.shape[-1]) // 4
         x = tf.keras.layers.Lambda(lambda x: tf.nn.depth_to_space(x, 2))(x)
         x_1 = conv_block(x, num_filters, kernel_size=3)
         x_2 = conv_block(x_1, num_filters, kernel_size=3)
@@ -39,7 +39,7 @@ def model(min_width=4):
         return x
 
     def bottleneck_unit(x):
-        num_filters = int(x.get_shape()[-1])
+        num_filters = int(x.shape[-1])
         x_1 = conv_block(x, num_filters, kernel_size=3)
         x_2 = conv_block(x_1, num_filters, kernel_size=3)
         x = tf.keras.layers.Add()([x_1, x_2])
